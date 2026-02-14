@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Damián ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  padding:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background-image:url("fondo.jpg");
+  background-size:cover;
+  background-position:center;
+  font-family:Georgia, serif;
+  overflow:hidden;
+}
+
+/* COUNTDOWN */
+#countdownContainer{
+  position:absolute;
+  top:20px;
+  text-align:center;
+  color:white;
+  background:rgba(0,0,0,0.6);
+  padding:20px 30px;
+  border-radius:15px;
+  backdrop-filter:blur(4px);
+}
+
+/* GIF animado */
+.countdown-gif{
+  width:140px;
+  margin-top:12px;
+  border-radius:12px;
+  animation:float 3s ease-in-out infinite,
+             pulse 2s ease-in-out infinite;
+  box-shadow:0 0 20px rgba(255,0,0,0.4);
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-8px);}
+  100%{transform:translateY(0);}
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.05);}
+  100%{transform:scale(1);}
+}
+
+/* SOBRE */
+.container{
+  display:none;
+  text-align:center;
+  background:rgba(255,248,240,0.92);
+  padding:40px;
+  border-radius:15px;
+  box-shadow:0 0 50px rgba(0,0,0,0.7);
+}
+
+.envelope{
+  width:280px;
+  max-width:90%;
+  transition:transform 0.8s ease;
+}
+
+.opening{
+  animation:openEnvelope 1s forwards;
+}
+
+@keyframes openEnvelope{
+  to{ transform:scale(0) rotateX(90deg); }
+}
+
+button{
+  padding:10px 25px;
+  margin:15px;
+  border:none;
+  font-size:16px;
+  cursor:pointer;
+  border-radius:8px;
+  background:#7b0f18;
+  color:white;
+}
+
+/* CONTENIDO */
+.content{
+  display:none;
+  position:absolute;
+  width:90%;
+  max-width:700px;
+  height:90vh;
+  background:rgba(245,230,211,0.97);
+  padding:20px;
+  overflow-y:auto;
+  border:15px solid #5e0b12;
+  box-shadow:0 0 60px rgba(0,0,0,0.9);
+  border-radius:15px;
+  text-align:center;
+}
+
+.content img{
+  width:100%;
+  height:auto;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.next-btn{
+  margin-top:20px;
+}
+
+/* CORAZONES */
+@keyframes fall{
+  to{
+    transform:translateY(100vh);
+    opacity:0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="countdownContainer">
+  <h3>Esta carta se abrirá el 14 de febrero 💌</h3>
+  <div id="countdown"></div>
+  <img src="corazones.gif" class="countdown-gif">
+</div>
+
+<div class="container" id="startScreen">
+  <img src="sobre.png" class="envelope" id="envelope">
+  <h2>¿Quieres abrirlo?</h2>
+  <button onclick="openLetter()">Sí</button>
+</div>
+
+<div class="content" id="content">
+
+  <div id="step1">
+    <img src="carta.png">
+    <button class="next-btn" onclick="nextStep(2)">Siguiente</button>
+  </div>
+
+  <div id="step2" style="display:none;">
+    <img src="imagen2.png">
+    <button class="next-btn" onclick="nextStep(3)">Siguiente</button>
+  </div>
+
+  <div id="step3" style="display:none;">
+    <img src="imagen3.png">
+  </div>
+
+</div>
+
+<iframe id="music" width="0" height="0" src="" allow="autoplay"></iframe>
+
+<script>
+
+// FECHA 14 FEB 2026 00:00 COSTA RICA
+const targetDate = new Date("2026-02-14T00:00:00-06:00");
+let heartsLaunched = false;
+
+function updateCountdown(){
+  const now = new Date();
+  const diff = targetDate - now;
+
+  if(diff <= 0){
+    document.getElementById("countdownContainer").style.display="none";
+    document.getElementById("startScreen").style.display="block";
+
+    if(!heartsLaunched){
+      launchHearts();
+      heartsLaunched = true;
+    }
+    return;
+  }
+
+  let days = Math.floor(diff/1000/60/60/24);
+  let hrs = Math.floor(diff/1000/60/60)%24;
+  let mins = Math.floor(diff/1000/60)%60;
+  let secs = Math.floor(diff/1000)%60;
+
+  document.getElementById("countdown").innerHTML =
+  days+" días "+hrs+"h "+mins+"m "+secs+"s";
+}
+
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+function openLetter(){
+  const envelope = document.getElementById("envelope");
+  envelope.classList.add("opening");
+
+  setTimeout(()=>{
+    document.getElementById("startScreen").style.display="none";
+    document.getElementById("content").style.display="block";
+    document.getElementById("music").src =
+    "https://www.youtube.com/embed/jSPpbOGnFgk?autoplay=1";
+  },900);
+}
+
+function nextStep(step){
+  document.getElementById("step1").style.display="none";
+  document.getElementById("step2").style.display="none";
+  document.getElementById("step3").style.display="none";
+  document.getElementById("step"+step).style.display="block";
+}
+
+/* CORAZONES ROJO OSCURO */
+function launchHearts(){
+  for(let i=0;i<40;i++){
+    const heart = document.createElement("div");
+    heart.innerHTML="❤";
+    heart.style.position="fixed";
+    heart.style.top="-20px";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(Math.random()*25+20)+"px";
+    heart.style.color="#7b0f18";
+    heart.style.animation="fall "+(Math.random()*3+3)+"s linear forwards";
+    heart.style.zIndex="9999";
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(),6000);
+  }
+}
+
+</script>
+
+</body>
+</html>
